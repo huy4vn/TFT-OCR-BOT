@@ -27,6 +27,7 @@ class Arena:
         self.board_unknown: list = []
         self.unknown_slots: list = comps_manager.get_unknown_slots()
         self.champs_to_buy: list = comps_manager.champions_to_buy()
+        self.augments_to_select: list = comps_manager.augments_to_select()
         self.board_names: list = []
         self.items: list = []
         self.final_comp = False
@@ -323,7 +324,7 @@ class Arena:
             augments.append(augment)
 
         for augment in augments:
-            for potential in game_assets.AUGMENTS:
+            for potential in self.augments_to_select:
                 if potential in augment:
                     print(f"  Choosing augment: {augment}")
                     mk_functions.left_click(screen_coords.AUGMENT_LOC[augments.index(augment)].get_coords())
@@ -333,7 +334,7 @@ class Arena:
             print("  Rolling for augment")
             mk_functions.left_click(screen_coords.AUGMENT_ROLL.get_coords())
             self.augment_roll = False
-            self.pick_augment()
+            self.pick_augment() 
 
         print("  [!] No priority or backup augment found, undefined behavior may occur for the rest of the round")
         mk_functions.left_click(screen_coords.AUGMENT_LOC[0].get_coords())

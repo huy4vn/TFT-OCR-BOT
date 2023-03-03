@@ -67,7 +67,6 @@ class Game:
 
     def game_loop(self) -> None:
         """Loop that runs while the game is active, handles calling the correct tasks for round and exiting game"""
-        
         ran_round: str = None
         while game_functions.check_alive():
             self.round: str = game_functions.get_round()

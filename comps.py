@@ -48,6 +48,9 @@ class CompsManager:
                 raise ValueError("Comps.py | Champion level must be a valid level (1-3)")
         return champs_to_buy
 
+    def augments_to_select(self) -> list:
+        """Creates a list of augments to select during the game"""
+        return self.CURRENT_COMP()[2]["augments"]
 
     def get_unknown_slots(self) -> list:
         """Creates a list of slots on the board that don't have a champion from the team composition"""

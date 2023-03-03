@@ -14,6 +14,7 @@ from difflib import SequenceMatcher
 import os
 from comps import CompsManager
 from bs4 import BeautifulSoup
+import pyperclip
 
 LOLCHESS_CHAMPIONS_URL = 'https://lolchess.gg/champions/'
 LOLCHESS_META_COMPS_URL = 'https://lolchess.gg/meta'
@@ -84,10 +85,10 @@ def __LoadLolChessComps(input_str, set_str, comps_manager: CompsManager):
         query_data = json.loads(json_in_text).get("props").get("pageProps").get("dehydratedState").get("queries")[
             0].get("state").get("data").get("refs")
         deck_slots = requests.get(f"https://tft.dakgg.io/api/v1/team-builders/{deck_keys}").json()
+        print(f"https://tft.dakgg.io/api/v1/team-builders/{deck_keys}")
         slots = {}
         counter = 0
         for each_slot in deck_slots.get("teamBuilder", {}).get("slots", []):
-
             if each_slot is not None:
                 try:
                     champion_name = \
@@ -99,8 +100,9 @@ def __LoadLolChessComps(input_str, set_str, comps_manager: CompsManager):
                 slots[champion_name] = {'board_position': LOLCHESS_BOARD_ARRANGE[each_slot.get("index")], 'items': slot_items,
                                         'level': 3, 'final_comp': True}
             counter += 3
-
-        output_comps.append([nms, slots])
+        aguments = {}
+        aguments["augments"] = render_augment(query_data.get("augments"), deck_slots.get("teamBuilder", {}).get("augments", []))
+        output_comps.append([nms, slots,aguments])
     return output_comps
 
 
@@ -108,6 +110,9 @@ def render_item(ob, ids):
     items = list(filter(lambda e: e['key'] in ids, ob))
     return [i['name'].replace(" ", "").replace("'", "") for i in items]
 
+def render_augment(ob, ids):
+    items = list(filter(lambda e: e['key'] in ids, ob))
+    return [i['name'].replace("'", "") for i in items]
 
 def __LoadCommunityDragon():
     loaded_string = requests.get(DRAGON_URL)
